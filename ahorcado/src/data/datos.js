@@ -1,0 +1,22 @@
+export const nombres = [
+  "Pepinillo",
+  "DonCacahuate",
+  "Chispin",
+  "Tortuguin",
+  "Pancracio",
+  "Bigotón",
+  "Fosforito",
+  "Chancletín",
+  "Pastrami",
+  "Chisguete",
+  "Bombón",
+  "Pompín",
+  "Tribilín",
+  "Guacamole",
+  "Mostachón",
+  "Pelusín",
+  "Galletín",
+  "Patacón",
+  "Churumbelo",
+  "Mofletín"
+];
