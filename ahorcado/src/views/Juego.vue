@@ -1,85 +1,140 @@
 <template>
-  <div class="fullscreen bg-main flex flex-center">
-    <!-- 🔵 NAV SUPERIOR -->
-    <div class="navBar row justify-between items-center q-pa-md">
+  <div class="fullscreen juego flex flex-center">
+    <nav class="navBar row justify-between items-center q-pa-md">
       <div class="jugador text-white text-bold">👤 {{ nombreJugador }}</div>
 
       <div class="vidas text-white text-bold">
         ❤️ {{ vidas }} / {{ vidasMax }}
       </div>
+
+      <div class="tiempo text-white text-bold">⏱ {{ tiempo }} s</div>
+    </nav>
+
+    <div class="juegoAhorcado">
+      <div class="cardAhorcado">
+        <img :src="imagenAhorcado" alt="ahorcado" class="ahorcado-img" />
+      </div>
+      <q-card class="cardPalabra q-pa-xl">
+        <div class="column items-center">
+          <h2 class="titulo text-white text-bold q-mb-md">
+            ¡ADIVINA LA PALABRA!
+          </h2>
+
+          <div class="row justify-center q-mb-md letras">
+            <span
+              v-for="(letra, index) in palabraEstado"
+              :key="index"
+              class="letra"
+            >
+              {{ letra }}
+            </span>
+          </div>
+
+          <div class="categoria text-white q-mb-md">
+            Categoría: <b>{{ categoria }}</b>
+          </div>
+
+          <div class="teclado">
+            <div class="row justify-center q-gutter-sm q-mb-sm">
+              <q-btn
+                v-for="letra in fila1"
+                :key="letra"
+                :label="letra"
+                class="botonLetra"
+                :color="colorLetra(letra)"
+                @click="seleccionar(letra)"
+                :disable="yaUsada(letra)"
+              />
+            </div>
+
+            <div class="row justify-center q-gutter-sm q-mb-sm">
+              <q-btn
+                v-for="letra in fila2"
+                :key="letra"
+                :label="letra"
+                class="botonLetra"
+                :color="colorLetra(letra)"
+                @click="seleccionar(letra)"
+                :disable="yaUsada(letra)"
+              />
+            </div>
+
+            <div class="row justify-center q-gutter-sm">
+              <q-btn
+                v-for="letra in fila3"
+                :key="letra"
+                :label="letra"
+                class="botonLetra"
+                :color="colorLetra(letra)"
+                @click="seleccionar(letra)"
+                :disable="yaUsada(letra)"
+              />
+            </div>
+          </div>
+        </div>
+      </q-card>
     </div>
 
-    <div class="ahorcado-container">
-      <img :src="imagenAhorcado" alt="ahorcado" class="ahorcado-img" />
-    </div>
+    <q-dialog v-model="modalGanar" persistent>
+      <q-card class="modalInfoJuego modalGanar q-pa-xl">
+        <h4 class="tituloModal text-center">¡GANASTE! 🎉</h4>
 
-    <!-- 🔵 TARJETA DEL JUEGO -->
-    <q-card class="gameCard q-pa-xl">
-      <div class="column items-center">
-        <h2 class="titulo text-white text-bold q-mb-md">
-          ¡ADIVINA LA PALABRA!
-        </h2>
+        <p class="textoModal text-center">
+          Has adivinado la palabra: <b>{{ palabra }}</b>
+        </p>
 
-        <div class="row justify-center q-mb-md letrasRow">
-          <span
-            v-for="(letra, index) in palabraEstado"
-            :key="index"
-            class="letra"
-          >
-            {{ letra }}
-          </span>
-        </div>
-
-        <div class="categoria text-white q-mb-md">
-          Categoría: <b>{{ categoria }}</b>
-        </div>
-
-        <div class="teclado">
-          <div class="row justify-center q-gutter-sm q-mb-sm">
-            <q-btn
-              v-for="letra in fila1"
-              :key="letra"
-              :label="letra"
-              class="btnLetra"
-              :color="colorLetra(letra)"
-              @click="seleccionar(letra)"
-              :disable="yaUsada(letra)"
-            />
-          </div>
-
-          <div class="row justify-center q-gutter-sm q-mb-sm">
-            <q-btn
-              v-for="letra in fila2"
-              :key="letra"
-              :label="letra"
-              class="btnLetra"
-              :color="colorLetra(letra)"
-              @click="seleccionar(letra)"
-              :disable="yaUsada(letra)"
-            />
-          </div>
-
-          <div class="row justify-center q-gutter-sm">
-            <q-btn
-              v-for="letra in fila3"
-              :key="letra"
-              :label="letra"
-              class="btnLetra"
-              :color="colorLetra(letra)"
-              @click="seleccionar(letra)"
-              :disable="yaUsada(letra)"
-            />
-          </div>
-        </div>
-
-        <div class="row justify-center q-gutter-md q-mt-xl">
+        <div class="row justify-center q-mt-lg botonesModal">
           <q-btn
-            label="Pista"
+            color="green"
+            label="Jugar otra vez"
+            to="/categoria"
+            rounded
+            unelevated
+          />
+
+          <q-btn
+            label="Record"
             color="blue"
             rounded
             unelevated
-            class="botonPista"
-            @click="mostrarPista"
+            to="/record"
+          />
+
+          <q-btn
+            label="Salir"
+            color="orange"
+            rounded
+            unelevated
+            to="/inicio"
+          />
+        </div>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="modalPerder" persistent>
+      <q-card class="modalInfoJuego modalPerder q-pa-xl">
+        <h4 class="tituloModal text-center">¡PERDISTE! 😢</h4>
+
+        <p class="textoModal text-center">
+          La palabra era: <b>{{ palabra }}</b>
+        </p>
+
+        <div class="row justify-center q-mt-lg botonesModal">
+          <q-btn
+            color="red"
+            label="Intentar de nuevo"
+            to="/categoria"
+            rounded
+            unelevated
+          />
+
+          <q-btn
+            label="Record"
+            color="blue"
+            rounded
+            unelevated
+            class="botonRecord"
+            to="/record"
           />
 
           <q-btn
@@ -88,47 +143,7 @@
             rounded
             unelevated
             class="botonSalir"
-            to="/"
-          />
-        </div>
-      </div>
-    </q-card>
-
-    <q-dialog v-model="modalGanar">
-      <q-card class="modal-card win-modal q-pa-xl">
-        <h4 class="titulo-ganar text-center">¡GANASTE! 🎉</h4>
-
-        <p class="texto-modal text-center">
-          Has adivinado la palabra: <b>{{ palabra }}</b>
-        </p>
-
-        <div class="row justify-center q-mt-lg">
-          <q-btn
-            color="green"
-            label="Jugar otra vez"
-            to="/categoria"
-            rounded
-            unelevated
-          />
-        </div>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model="modalPerder">
-      <q-card class="modal-card lose-modal q-pa-xl">
-        <h4 class="titulo-perder text-center">¡PERDISTE! 😢</h4>
-
-        <p class="texto-modal text-center">
-          La palabra era: <b>{{ palabra }}</b>
-        </p>
-
-        <div class="row justify-center q-mt-lg">
-          <q-btn
-            color="red"
-            label="Intentar de nuevo"
-            to="/categoria"
-            rounded
-            unelevated
+            to="/inicio"
           />
         </div>
       </q-card>
@@ -148,9 +163,6 @@ const imagenAhorcado = computed(() => {
   ).href;
 });
 
-/* ===========================================================
-   DATOS DEL JUGADOR
-   =========================================================== */
 const idActual = localStorage.getItem("jugadorActual");
 const jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
 const jugador = jugadores.find((j) => j.id === idActual);
@@ -159,9 +171,6 @@ const categoriaSeleccionada = jugador?.categoria;
 const nivelSeleccionado = Number(jugador?.nivel);
 const nombreJugador = jugador?.nombre || "Jugador";
 
-/* ===========================================================
-   BUSCAR CONFIGURACIÓN DE CATEGORÍA Y NIVEL
-   =========================================================== */
 const categoriaData = categorias.find(
   (cat) => cat.nombre === categoriaSeleccionada
 );
@@ -178,9 +187,6 @@ const palabra =
 
 const categoria = categoriaSeleccionada?.toUpperCase() || "CATEGORÍA";
 
-/* ===========================================================
-   VARIABLES DEL JUEGO
-   =========================================================== */
 const vidas = ref(vidasMax);
 const usadas = ref([]);
 
@@ -188,14 +194,10 @@ const fila1 = ["A", "B", "C", "D", "E", "F", "G"];
 const fila2 = ["H", "I", "J", "K", "L", "M", "N", "Ñ", "O"];
 const fila3 = ["P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
-/* Estado de la palabra */
 const palabraEstado = computed(() =>
   palabra.split("").map((letra) => (usadas.value.includes(letra) ? letra : "_"))
 );
 
-/* ===========================================================
-   MODALES DE GANAR Y PERDER
-   =========================================================== */
 const modalGanar = ref(false);
 const modalPerder = ref(false);
 
@@ -203,19 +205,14 @@ const palabraCompleta = computed(
   () => palabraEstado.value.join("") === palabra
 );
 
-/* Mostrar modal cuando gane */
 watch(palabraCompleta, (nueva) => {
   if (nueva) modalGanar.value = true;
 });
 
-/* Mostrar modal cuando pierda */
 watch(vidas, (n) => {
   if (n <= 0) modalPerder.value = true;
 });
 
-/* ===========================================================
-   FUNCIONES
-   =========================================================== */
 const yaUsada = (letra) => usadas.value.includes(letra);
 
 const colorLetra = (letra) => {
@@ -230,81 +227,161 @@ const seleccionar = (letra) => {
 
   if (!palabra.includes(letra)) vidas.value--;
 };
+
+const tiempo = ref(0);
+let intervalo = null;
+
+watch(palabraEstado, () => {
+  if (!intervalo) {
+    intervalo = setInterval(() => {
+      tiempo.value++;
+    }, 1000);
+  }
+});
+
+watch([modalGanar, modalPerder], ([gana, pierde]) => {
+  if (gana || pierde) {
+    clearInterval(intervalo);
+    intervalo = null;
+
+    guardarRecord();
+  }
+});
+
+// Guardar record en localStorage
+const guardarRecord = () => {
+  const lista = JSON.parse(localStorage.getItem("jugadores")) || [];
+
+  const index = lista.findIndex((j) => j.id === idActual);
+  if (index !== -1) {
+    lista[index].tiempo = tiempo.value;
+  }
+
+  localStorage.setItem("jugadores", JSON.stringify(lista));
+};
 </script>
 
-
-
-
 <style scoped>
-.bg-main {
-  background: radial-gradient(circle at center, #0a4c8b, #043a6b);
+.juego {
   background-image: url("../assets/fondoInicio.png");
   background-size: cover;
   background-position: center;
-}
-
-.gameCard {
-  width: 750px;
-  max-width: 95vw;
-  border-radius: 25px;
-  background: linear-gradient(135deg, #0b68b7, #084c8f);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-}
-
-.titulo {
-  font-size: 30px;
-}
-
-.letrasRow .letra {
-  font-size: 32px;
-  margin: 0 6px;
-  color: white;
-  border-bottom: 3px solid white;
-  padding: 4px 6px;
-  width: 32px;
-  text-align: center;
-}
-
-.categoria {
-  font-size: 18px;
-}
-
-.btnLetra {
-  font-size: 18px;
-  padding: 10px 14px;
-  width: 45px;
-  font-weight: bold;
-  border-radius: 10px;
-}
-
-.botonPista {
-  width: 130px;
-  font-size: 18px;
-}
-
-.botonSalir {
-  width: 130px;
-  font-size: 18px;
-  background: linear-gradient(135deg, #ffa033, #ff6b00) !important;
-  color: white;
+  overflow-y: auto;
 }
 
 .navBar {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(4px);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
+  padding: 16px;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
 }
+
+h2{
+  margin: 0;
+} 
 
 .jugador,
 .vidas {
   font-size: 18px;
 }
 
-/* ----- TARJETA BASE DE LOS MODALES ----- */
-.modal-card {
+.tiempo {
+  font-size: clamp(16px, 2vw, 22px);
+  margin-bottom: 10px;
+}
+
+.juegoAhorcado {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 70px 20px 20px 20px;
+  gap: 20px;
+}
+
+.cardAhorcado {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px;
+
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ahorcado-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+}
+
+.cardPalabra {
+  width: 750px;
+  max-width: 95vw;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #0b68b7, #084c8f);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardPalabra .column {
+  width: 100%;
+  text-align: center;
+}
+
+.letras {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.letra {
+  font-size: 32px;
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+.teclado {
+  width: 100%;
+  max-width: 600px;
+}
+
+.botonLetra {
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.titulo {
+  font-size: 30px;
+}
+
+.categoria {
+  font-size: clamp(14px, 2.5vw, 22px);
+}
+
+/* modal Informacion del juego */
+.modalInfoJuego {
   width: 350px;
   max-width: 90vw;
   border-radius: 22px;
@@ -315,71 +392,71 @@ const seleccionar = (letra) => {
   border: 2px solid #ffffff50;
 }
 
-/* ----- MODAL GANAR ----- */
-.win-modal {
+.modalGanar {
   background: linear-gradient(160deg, #2ecc70cc, #1f9e52cc);
   border-color: #b0ffcc;
 }
 
-.titulo-ganar {
+.tituloModal {
   color: white;
   font-size: 28px;
   font-weight: 800;
   text-shadow: 0 0 5px #ffffff;
 }
 
-/* ----- MODAL PERDER ----- */
-.lose-modal {
+.modalPerder {
   background: linear-gradient(160deg, #ff4a4acc, #c71b1bcc);
   border-color: #ffb5b5;
 }
 
-.titulo-perder {
-  color: white;
-  font-size: 28px;
-  font-weight: 800;
-  text-shadow: 0 0 5px #ffffff;
-}
-
-/* ----- TEXTO DEL CONTENIDO ----- */
-.texto-modal {
+.textoModal {
   color: #ffffff;
   font-size: 18px;
   font-weight: 500;
   margin-top: 8px;
 }
 
-.ahorcado-container {
-  width: 100%;
-  max-width: 350px;
-  padding: 15px;
-  margin: 0 40px;
-
-  /* Marco glassmorphism */
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-
+.botonesModal {
   display: flex;
-  justify-content: center;
-  align-items: center;
-
-  /* Fondo bonito */
-  background-image: radial-gradient(
-    circle at center,
-    rgba(255, 255, 255, 0.15),
-    rgba(0, 0, 0, 0.15)
-  );
+  flex-direction: column;
+  align-items: center;  
+  gap: 18px;
+  width: 100%;
 }
 
-.ahorcado-img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+.botonesModal .q-btn {
+  width: 180px;  
+  justify-content: center;
+  text-align: center;
+}
 
-  /* Suavizado */
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+/* media */
+
+@media (max-width: 600px) {
+  .cardPalabra {
+    padding: 20px !important;
+  }
+
+  .botonLetra {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .letra {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 380px) {
+  .botonLetra {
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+  }
+
+  .letra {
+    font-size: 22px;
+  }
 }
 </style>

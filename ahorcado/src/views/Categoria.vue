@@ -91,28 +91,16 @@ const irNivel = () => {
 <style scoped>
 .categorias {
   min-height: 100vh;
-  padding: 25px 0;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-image: url("../assets/fondoInicio.png");
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
-    background-size: cover;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
-
-.categorias::before {
-  content: "";
-  position: absolute;
-  width: 350px;
-  height: 350px;
-  top: -80px;
-  right: -80px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
-  filter: blur(90px);
 }
 
 .personaje {
@@ -122,7 +110,6 @@ const irNivel = () => {
 
 .cardCategorias {
   width: 650px;
-  max-width: 92vw;
   border-radius: 32px;
   background: linear-gradient(180deg, #1e8fff, #0057a1 75%);
   border: 2px solid rgba(255, 255, 255, 0.25);
@@ -210,31 +197,4 @@ const irNivel = () => {
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 📱 Móviles pequeños */
-@media (max-width: 480px) {
-  .personaje {
-    width: 180px;
-  }
-}
-
-/* 📱 Móviles medianos */
-@media (max-width: 768px) {
-  .personaje {
-    width: 220px;
-  }
-}
-
-/* 💻 Tablets o pantallas medianas */
-@media (max-width: 1024px) {
-  .personaje {
-    width: 260px;
-  }
-}
-
-/* 🖥️ Pantallas grandes — opcional */
-@media (min-width: 1440px) {
-  .personaje {
-    width: 340px;
-  }
-}
 </style>

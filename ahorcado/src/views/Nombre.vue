@@ -38,8 +38,8 @@
           <div class="row justify-center q-gutter-md">
             <button class="continuar" @click="irCategorias">Continuar</button>
 
-            <button class="botonAleatorio" @click="generarAleatorio">
-              Nombre aleatorio
+            <button class="aleatorio" @click="generarAleatorio">
+              Aleatorio
             </button>
           </div>
 
@@ -120,6 +120,8 @@ const irCategorias = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 .personaje {
@@ -167,38 +169,50 @@ const irCategorias = () => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.botonAleatorio {
-  background: linear-gradient(135deg, #ff8800, #ff8229);
-  box-shadow: 0px 4px 0px #cd7b00;
-  color: white;
-  padding: 10px 18px;
-  font-family: "Comic Sans MS", cursive, sans-serif;
+.aleatorio {
+  background-color: #ff9f1c;    
+  color: #ffffff;
+  padding: 12px 26px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
   border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0px 4px 0px #00000033;
+}
+
+.aleatorio:hover {
+  background-color: #ffb44c;     
+  transform: translateY(-2px);
+  box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.35);
+}
+
+.aleatorio:active {
+  transform: scale(0.97);
 }
 
 .continuar {
-  background: #00ff1a;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-  padding: 12px 28px;
+  background-color: #28c76f;    
+  color: #ffffff;
+  padding: 12px 26px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-family: "Comic Sans MS", cursive, sans-serif;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 2px #00000055;
-
-  box-shadow: 0px 4px 0px #00ca07;
-  transition: transform 0.1s, box-shadow 0.1s;
-}
-
-.continuar:active {
-  transform: translateY(3px);
-  box-shadow: 0px 1px 0px #00c324;
+  transition: 0.25s ease;
+  box-shadow: 0px 4px 0px #00000033;
 }
 
 .continuar:hover {
-  filter: brightness(1.1);
+  background-color: #34d97e;        /* verde más claro */
+  transform: translateY(-2px);
+  box-shadow: 0px 7px 14px rgba(0, 0, 0, 0.35);
+}
+
+.continuar:active {
+  transform: scale(0.97);
 }
 
 .texto {

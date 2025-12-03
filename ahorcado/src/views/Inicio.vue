@@ -1,26 +1,21 @@
 <template>
-  <div class="hangmanContainer">
-    <img :src="titulo" alt="titulo" />
+  <div class="containerAhorcado">
+    <img :src="titulo" alt="titulo" class="titulo" />
 
     <div class="contenido">
       <img :src="muneco" alt="muñeco" class="personaje" />
 
-      <q-card
-        class="my-card text-white cajaIntro"
-        style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
-      >
-        <q-card-section>
-          <div class="text-h6 tituloIntro">INTRODUCCIÓN</div>
-        </q-card-section>
+<div class="cajaIntro text-white">
+  <div class="cardHeader">
+    <div class="tituloIntro">INTRODUCCIÓN</div>
+  </div>
 
-        <q-card-section class="q-pt-none">
-          Tu misión es adivinar la palabra antes de que nuestro pobre monigote
-          tenga un mal día. ¡Piensa bien cada letra, su vida depende de tu
-          ortografía! Cada error lo acerca al desastre, pero cada acierto le
-          devuelve la esperanza. Prepárate: podría sobrevivir… o terminar peor
-          por tus decisiones.
-        </q-card-section>
-      </q-card>
+  <div class="cardContent">
+    Adivina la palabra antes de que el monigote tenga un mal día. Cada
+    error lo acerca al desastre y cada acierto le da esperanza. ¡Piensa
+    bien tus letras, su destino está en tus manos!
+  </div>
+</div>
     </div>
     <div class="botones">
       <button class="btn jugar" @click="irNombre">JUGAR</button>
@@ -41,59 +36,89 @@ const irNombre = () => {
 };
 </script>
 
-<style scoped>
-.hangmanContainer {
-  width: 100%;
-  height: 100vh;
+<style >
+.containerAhorcado {
+  min-height: 100vh;
   background-image: url("../assets/fondoInicio.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
   display: flex;
-  flex-direction: column;
+  flex-direction: column; 
+  justify-content: center;
   align-items: center;
-  color: white;
-  text-align: center;
-  padding-top: 20px;
-  font-family: "Comic Sans MS", cursive, sans-serif;
+
+  padding: 20px;
+  overflow-y: auto;   
 }
 
-img {
-  width: 600px;
+.tituloIntro {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.35);
 }
+
+.cardContent {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #cce0ff; /* azul suave para texto */
+}
+
 
 .titulo {
-  font-size: 60px;
-  font-weight: bold;
-  color: #ffdd00;
-}
-
-.subtitulo {
-  font-size: 35px;
-  margin-top: -10px;
+  width: 90%;
+  max-width: 500px;
+  height: auto;
+  min-width: 200px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
 }
 
 .contenido {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   margin-top: 20px;
 }
 
-.contenido img {
-  width: 280px;
-}
-
 .personaje {
-  width: 180px;
+  width: 260px;
+  max-width: 90%;
+  min-width: 150px;
   margin-right: 20px;
+  display: block;
 }
 
 .cajaIntro {
-  background: #ffffff33;
-  padding: 10px;
-  border-radius: 10px;
-  width: 350px;
-  backdrop-filter: blur(3px);
+  max-width: 500px;                
+  margin: 20px auto;               
+  border-radius: 18px;             
+  box-shadow: 0 8px 22px rgba(0,0,0,0.35); 
+  overflow: hidden;                
+  text-align: center;
+  padding: 20px;
+
+  /* gradiente azul más claro */
+  background: linear-gradient(135deg, #2a4d8f 0%, #3b69b1 50%, #4d82d3 100%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease; 
+}
+
+.cajaIntro:hover {
+  transform: translateY(-4px); 
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45); 
+}
+
+.cardContent {
+  padding: 10px 0; 
+}
+
+.cardHeader {
+  margin-bottom: 10px; 
 }
 
 .tituloIntro {
@@ -101,18 +126,9 @@ img {
 }
 
 .botones {
+  display: grid;
+  justify-content: center;
   margin-top: 25px;
-  display: flex;
-  gap: 15px;
-}
-
-.btn {
-  padding: 10px 25px;
-  border: none;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
 }
 
 .jugar {
